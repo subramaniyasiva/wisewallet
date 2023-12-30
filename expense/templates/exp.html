@@ -1,0 +1,835 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+
+    <!-- Use Django's static template tag for linking the CSS file -->
+    <link rel="stylesheet" href="{% static 's5.css' %}">
+    <link rel="shortcut icon" type="x-icon" href="{% static 'logo.png' %}">
+    <title>Add Expenses</title>
+    <style>
+        body {
+            background-image: url('{% static "E:/django project/expense/static/5.jpg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .edit_b {
+  
+            background-color: #2ea44f;
+            border: 1px solid rgba(27, 31, 35, .15);
+            border-radius: 6px;
+            box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            padding: 6px 16px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            white-space: nowrap;
+          }
+          
+          .edit_b:focus:not(:focus-visible):not(.focus-visible) {
+            box-shadow: none;
+            outline: none;
+          }
+          
+          .edit_b:hover {
+            background-color: #2c974b;
+          }
+          
+          .edit_b:focus {
+            box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+            outline: none;
+          }
+          
+          .edit_b:disabled {
+            background-color: #94d3a2;
+            border-color: rgba(27, 31, 35, .1);
+            color: rgba(255, 255, 255, .8);
+            cursor: default;
+          }
+          
+          .edit_b:active {
+            background-color: #298e46;
+            box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+          }
+          
+.container1 {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+table {
+    display:none;
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th,
+td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+}
+
+th {
+	text-align: left;
+}
+
+thead {
+	th {
+		background-color: #55608f;
+	}
+}
+
+tbody {
+	tr {
+		&:hover {
+			background-color: rgba(255,255,255,0.3);
+		}
+	}
+	td {
+		position: relative;
+		&:hover {
+			&:before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -9999px;
+				bottom: -9999px;
+				background-color: rgba(255,255,255,0.2);
+				z-index: -1;
+			}
+		}
+	}
+}
+          
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <header>
+        <!-- Use Django's static template tag for linking images -->
+        <img src="{% static 'logo.png' %}" alt="Logo" class="logo">
+
+        <center>
+            <ul>
+                <li><a href='{% url "home" %}' style="color:white;">Home</a></li>
+                <li><a href='{% url "about" %}' style="color:white;">About</a></li>
+                <li><a href='' style="color:white;">Logout</a></li>
+                <li><a href='{% url "signup" %}' style="color:white;">Sign-up</a></li>
+                <li><a href='{% url "contact_us" %}' style="color:white;">Contact Us</a></li>
+            </ul>
+        </center>
+    </header>
+    <br><br><br>
+
+    <button type="button" onclick="toggleTable()" class="mc" id="viewPreviousExpensesButton">View Previous expenses</button><br><br>
+    <button id="showChartButton" class="mc">Get insights</button>
+    <div id="chartContainer" style="display: none;">
+        <canvas id="myChart" height="50" width="50"></canvas>
+    </div>
+<Br><br>
+    <div class="saved-expenses">
+        
+        {% if expenses %}
+        <div class="containwer1">
+        <table id="expensesTable">  
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Label</th>
+                    <th>Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.date }}</td>
+                        <td>{{ expense.label }}</td>
+                        <td>{{ expense.value }}</td>
+                        <td>
+                            <button type="button" onclick="editEntry('{{ expense.id }}')" class="edit_b">Edit</button>
+                            
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr id="totarow">
+                    <td colspan="2" style="text-align: right; font-weight: bold;">Total:</td>
+                    <td id="totalValue">&#8377;0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        <canvas id="expensesChart" width="Auto" height="Auto"></canvas>
+        </div>
+        {% else %}
+            <p style="color:white";>No expenses saved yet.</p>
+        {% endif %}
+    </div>
+    <div class="items">
+        <!-- Initial set of input boxes -->
+        <div class="item-container" id="itemContainer1">
+            <label for="date1">Date</label>
+            <input type="date" id="date1" name="date" onchange="updateDate(this.value)">
+            <label for="item">Select the item</label>
+            <select id="expenseItems1" name="expenseItems" onchange="checkOther(1)">
+                <!-- ... options ... -->
+                <option value="Property_Taxes">Property Taxes</option>
+                <option value="Home_Insurance">Home Insurance</option>
+                <option value="Utilities" selected>Utilities (Electricity, Water, Gas)</option>
+                <option value="Home_Repairs">Home Repairs</option>
+                <option value="Home_Maintenance">Home Maintenance</option>
+                <option value="Home_Improvement">Home Improvement</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Public_Transportation">Public Transportation</option>
+                <option value="Car_Insurance">Car Insurance</option>
+                <option value="Car_Loan_Payment">Car Loan Payment</option>
+                <option value="Vehicle_Maintenance">Vehicle Maintenance</option>
+                <option value="Parking_Fees">Parking Fees</option>
+                <option value="Tolls">Tolls</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Dining_Out">Dining Out</option>
+                <option value="Fast_Food">Fast Food</option>
+                <option value="Coffee_Shops">Coffee Shops</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Health_Insurance_Premiums">Health Insurance Premiums</option>
+                <option value="Medical_Consultations">Medical Consultations</option>
+                <option value="Prescription_Medications">Prescription Medications</option>
+                <option value="OTC_Medications">Over-the-Counter Medications</option>
+                <option value="Health_Supplements">Health Supplements</option>
+                <option value="Gym_Memberships">Gym Memberships</option>
+                <option value="Internet">Internet</option>
+                <option value="Cable_TV">Cable/Satellite TV</option>
+                <option value="Phone_Bills">Phone Bills (Mobile and Landline)</option>
+                <option value="Home_Security_System">Home Security System</option>
+                <option value="Life_Insurance_Premiums">Life Insurance Premiums</option>
+                <option value="Disability_Insurance_Premiums">Disability Insurance Premiums</option>
+                <option value="Auto_Insurance_Premiums">Auto Insurance Premiums</option>
+                <option value="Home_Insurance_Premiums">Home Insurance Premiums</option>
+                <option value="Other_Insurance_Policies">Other Insurance Policies</option>
+                <option value="Credit_Card_Payments">Credit Card Payments</option>
+                <option value="Personal_Loan_Payments">Personal Loan Payments</option>
+                <option value="Student_Loan_Payments">Student Loan Payments</option>
+                <option value="Car_Loan_Payments">Car Loan Payments</option>
+                <option value="Mortgage_Payments">Mortgage Payments</option>
+                <option value="Streaming_Services">Streaming Services</option>
+                <option value="Movie_Event_Tickets">Movie/Event Tickets</option>
+                <option value="Hobbies_Crafts">Hobbies and Crafts</option>
+                <option value="Video_Games">Video Games</option>
+                <option value="Books_Magazines">Books and Magazines</option>
+                <option value="Concerts_Shows">Concerts and Shows</option>
+                <option value="Tuition_Fees">Tuition Fees</option>
+                <option value="Books_Supplies">Books and Supplies</option>
+                <option value="Educational_Subscriptions">Educational Subscriptions</option>
+                <option value="Educational_Courses">Educational Courses</option>
+                <option value="Toiletries">Toiletries</option>
+                <option value="Haircuts">Haircuts</option>
+                <option value="Beauty_Products">Beauty Products</option>
+                <option value="Spa_Salon_Services">Spa and Salon Services</option>
+                <option value="Other">Other</option>
+
+                
+            </select>
+
+            <!-- Unique ID for the input element -->
+            <input type="text" id="otherItem1" name="otherItem" style="display: none;" placeholder="Enter your item">
+
+            <input type="number" id="price1" name="price" placeholder="Enter the price">
+
+            <button type="button" onclick="empty(1)" class="mc">Empty it</button>
+            <button type="button" onclick="deleteentry(1)" class="mc">Delete this entry</button>
+        </div>
+    </div>
+
+    <div class="mc1">
+        <button type="button" class="mc" onclick="moreitems()" align="right">Add more items</button>
+        <button type="button" class="mc" onclick="calall()" align="right">Calculate the total</button>
+        <!-- Add this button where you want to trigger the export -->
+        <button type="button" class="mc" id="saveButton" onclick="saveExpenses()">Save</button>
+        <button type="button" class="mc" onclick="exportToExcel()">Export to Excel</button>
+        <br><br><br>
+    </div>
+
+    <div class="total-container" id="totalContainer" style="text-align:right !important;">
+        <!-- Total amount will be displayed here -->
+    </div>
+
+    <script>
+        // Declare the data variable
+        var csrf_token = "{{ csrf_token }}";
+        var data = [];
+        var jsonData;
+        var currentDate = ""; // Variable to store the current date
+
+        function empty(entryNumber) {
+            // Function to clear input fields for a specific entry
+            document.getElementById("expenseItems" + entryNumber).value = "";
+            document.getElementById("otherItem" + entryNumber).value = "";
+            document.getElementById("price" + entryNumber).value = "";
+        }
+
+        function deleteentry(entryNumber) {
+            // Function to delete a specific entry
+            var itemContainer = document.getElementById("itemContainer" + entryNumber);
+            itemContainer.parentNode.removeChild(itemContainer);
+        }
+
+        function moreitems() {
+            // Function to dynamically add more items
+            var existingEntries = document.querySelectorAll('.item-container').length;
+            var newEntryNumber = existingEntries + 1;
+
+            var newItemDiv = document.createElement('div');
+
+            newItemDiv.className = 'item-container';
+            newItemDiv.id = 'itemContainer' + newEntryNumber;
+            newItemDiv.innerHTML = `
+                    <label for="date${newEntryNumber}">Date</label>
+                    <input type="date" id="date${newEntryNumber}" name="date" onchange="updateDate(this.value)">
+                    <label for="item">Select the item</label>
+                    
+                    <select id="expenseItems${newEntryNumber}" name="expenseItems" onchange="checkOther(${newEntryNumber})">
+                        <option value="Property_Taxes">Property Taxes</option>
+                        <option value="Home_Insurance">Home Insurance</option>
+                        <option value="Utilities" selected>Utilities (Electricity, Water, Gas)</option>
+                        <option value="Home_Repairs">Home Repairs</option>
+                        <option value="Home_Maintenance">Home Maintenance</option>
+                        <option value="Home_Improvement">Home Improvement</option>
+                        <option value="Fuel">Fuel</option>
+                        <option value="Public_Transportation">Public Transportation</option>
+                        <option value="Car_Insurance">Car Insurance</option>
+                        <option value="Car_Loan_Payment">Car Loan Payment</option>
+                        <option value="Vehicle_Maintenance">Vehicle Maintenance</option>
+                        <option value="Parking_Fees">Parking Fees</option>
+                        <option value="Tolls">Tolls</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Dining_Out">Dining Out</option>
+                        <option value="Fast_Food">Fast Food</option>
+                        <option value="Coffee_Shops">Coffee Shops</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Health_Insurance_Premiums">Health Insurance Premiums</option>
+                        <option value="Medical_Consultations">Medical Consultations</option>
+                        <option value="Prescription_Medications">Prescription Medications</option>
+                        <option value="OTC_Medications">Over-the-Counter Medications</option>
+                        <option value="Health_Supplements">Health Supplements</option>
+                        <option value="Gym_Memberships">Gym Memberships</option>
+                        <option value="Internet">Internet</option>
+                        <option value="Cable_TV">Cable/Satellite TV</option>
+                        <option value="Phone_Bills">Phone Bills (Mobile and Landline)</option>
+                        <option value="Home_Security_System">Home Security System</option>
+                        <option value="Life_Insurance_Premiums">Life Insurance Premiums</option>
+                        <option value="Disability_Insurance_Premiums">Disability Insurance Premiums</option>
+                        <option value="Auto_Insurance_Premiums">Auto Insurance Premiums</option>
+                        <option value="Home_Insurance_Premiums">Home Insurance Premiums</option>
+                        <option value="Other_Insurance_Policies">Other Insurance Policies</option>
+                        <option value="Credit_Card_Payments">Credit Card Payments</option>
+                        <option value="Personal_Loan_Payments">Personal Loan Payments</option>
+                        <option value="Student_Loan_Payments">Student Loan Payments</option>
+                        <option value="Car_Loan_Payments">Car Loan Payments</option>
+                        <option value="Mortgage_Payments">Mortgage Payments</option>
+                        <option value="Streaming_Services">Streaming Services</option>
+                        <option value="Movie_Event_Tickets">Movie/Event Tickets</option>
+                        <option value="Hobbies_Crafts">Hobbies and Crafts</option>
+                        <option value="Video_Games">Video Games</option>
+                        <option value="Books_Magazines">Books and Magazines</option>
+                        <option value="Concerts_Shows">Concerts and Shows</option>
+                        <option value="Tuition_Fees">Tuition Fees</option>
+                        <option value="Books_Supplies">Books and Supplies</option>
+                        <option value="Educational_Subscriptions">Educational Subscriptions</option>
+                        <option value="Educational_Courses">Educational Courses</option>
+                        <option value="Toiletries">Toiletries</option>
+                        <option value="Haircuts">Haircuts</option>
+                        <option value="Beauty_Products">Beauty Products</option>
+                        <option value="Spa_Salon_Services">Spa and Salon Services</option>
+                        <option value="Other">Other</option>
+ 
+                        <!-- Add your Django template logic to iterate over expense items and populate the options -->
+                        {% for expense_item in expense_items %}
+                            <option value="{{ expense_item }}">{{ expense_item }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <input type="text" id="otherItem${newEntryNumber}" name="otherItem" style="display: none;" placeholder="Enter your item">
+                    <input type="number" id="price${newEntryNumber}" name="price" placeholder="Enter the price">
+                    
+                    <button type="button" onclick="empty(${newEntryNumber})" class="mc">Empty it</button>
+                    <button type="button" onclick="deleteentry(${newEntryNumber})"" class="mc">Delete this entry</button>
+                `;
+            var itemsContainer = document.querySelector('.items');
+            itemsContainer.appendChild(newItemDiv);
+            var dateInput = document.getElementById("date" + newEntryNumber);
+            dateInput.value = currentDate;
+        }
+        function editEntry(entryNumber) {
+            // Function to edit a specific entry
+            console.log("Edit button clicked for entry:", entryNumber);
+        
+            // Assuming you have an input element for storing the expense ID
+            var expenseIdInput = document.getElementById("expenseId" + entryNumber);
+        
+            // Check if the expenseIdInput exists and has a value property
+            if (expenseIdInput && expenseIdInput.value !== undefined) {
+                // Retrieve the expense ID from the input element
+                var expenseId = expenseIdInput.value;
+        
+                // Check if the expense ID is a valid number
+                if (!isNaN(expenseId)) {
+                    // Fetch expense details using the expense ID
+                    fetch(`/get_expense_details/?id=${expenseId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Expense details:", data); // Debugging statement
+        
+                            // Call the function to show the edit form with the fetched data
+                            showEditForm(data);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching expense details:', error);
+                        });
+                } else {
+                    console.error('Invalid expense ID:', expenseId);
+                }
+            } else {
+                console.error('Expense ID input not found or has no value property.');
+            }
+        }
+        function toggleTable() {
+            var table = document.getElementById('expensesTable');
+            if (table) {
+                // Toggle the visibility
+                table.style.display = table.style.display === 'none' ? 'table' : 'none';
+        
+                // Optionally, you can scroll to the table when it becomes visible
+                if (table.style.display !== 'none') {
+                    table.scrollIntoView({ behavior: 'smooth' });
+                }
+            } else {
+                console.error("Table element not found.");
+            }
+        }
+        
+        
+        function showEditForm(entryId) {
+            // Fetch expense details from the server
+            fetch(`/get_expense_details/?id=${entryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error fetching expense details:', data.error);
+                    } else {
+                        // Populate the form with expense details
+                        document.getElementById('editExpenseId').value = data.id;
+                        document.getElementById('editDate').value = data.date;
+                        document.getElementById('editLabel').value = data.label;
+                        document.getElementById('editValue').value = data.value;
+                        // ... other fields
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching expense details:', error);
+                });
+        }
+        
+        
+        function saveEditedData(expenseId, newDate, newLabel, newPrice) {
+            // Make an AJAX request to update the data on the server
+            fetch('/update_expense/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token,
+                },
+                body: JSON.stringify({
+                    expense_id: expenseId,
+                    date: newDate,
+                    label: newLabel,
+                    value: newPrice,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Server Response:", data);
+                    if (data.status === 'success') {
+                        // Refresh the page or update the UI as needed
+                        alert('Expense updated successfully!');
+                    } else {
+                        alert('Error updating expense. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred. Please try again.');
+                });
+        }
+
+// Function to delete a specific entryId
+function deleteEntry(entryNumber) {
+    // Function to delete a specific entry
+    var itemContainer = document.getElementById("itemContainer" + entryNumber);
+
+    if (itemContainer) {
+        itemContainer.parentNode.removeChild(itemContainer);
+        console.log("Entry deleted successfully:", entryNumber);
+    } else {
+        console.error("Element not found:", "itemContainer" + entryNumber);
+    }
+}
+        var data = [];
+        var currentDate = ""; // Variable to store the current date
+
+        // Function to set the initial date
+        function setInitialDate() {
+            var dateInput = document.getElementById("date1");
+            currentDate = dateInput.value;
+        }
+        function updateDate(value) {
+            currentDate = value;
+        }
+
+        function calall() {
+            var priceInputs = document.getElementsByName("price");
+        
+            var total = 0;
+        
+            // Iterate through each input and add its value to the total
+            for (var i = 0; i < priceInputs.length; i++) {
+                var price = parseFloat(priceInputs[i].value) || 0; // Convert to float, default to 0 if NaN
+                total += price;
+        
+                // Get the corresponding category
+                var category = document.getElementById("expenseItems" + (i + 1)).value;
+        
+                // Add the entry to the global data array
+                data.push({ date: currentDate, label: category, value: price });
+            }
+        
+            // Display the total in the total container
+            document.getElementById("totalContainer").innerHTML = "&#8377;" + total.toFixed(2);
+        }
+        // Function to calculate and update the total
+function updateTotal() {
+    var priceCells = document.querySelectorAll("#expensesTable tbody td:nth-child(3)");
+    var total = 0;
+
+    // Iterate through each cell and add its value to the total
+    for (var i = 0; i < priceCells.length; i++) {
+        var price = parseFloat(priceCells[i].textContent) || 0; // Convert to float, default to 0 if NaN
+        total += price;
+    }
+
+    // Display the total in the totalValue cell in the tfoot
+    document.getElementById("totalValue").innerHTML = "&#8377;" + total.toFixed(2);
+}
+
+// Attach a click event listener to the "View Previous Expenses" button to update the total
+var viewPreviousExpensesButton = document.getElementById("viewPreviousExpensesButton");
+if (viewPreviousExpensesButton) {
+    viewPreviousExpensesButton.addEventListener("click", updateTotal);
+}
+
+        
+        // Attach a change event listener to price inputs to update the total on change
+        var priceInputs = document.getElementsByName("price");
+        for (var i = 0; i < priceInputs.length; i++) {
+            priceInputs[i].addEventListener("input", updateTotal);
+        }
+        
+        // Call the updateTotal function when the page is loaded
+        updateTotal();
+        function checkOther(entryNumber) {
+            var selectElement = document.getElementById("expenseItems" + entryNumber);
+            var priceInput = document.getElementById("price" + entryNumber);
+
+            if (selectElement.value === "Other") {
+                // Prompt the user to enter a custom item and price
+                var customItem = prompt("Enter your custom item:");
+
+                if (customItem !== null && customItem.trim() !== "") {
+                    // Add the custom item to the select options
+                    var newOption = document.createElement("option");
+                    newOption.value = customItem;
+                    newOption.text = customItem;
+                    selectElement.add(newOption);
+
+                    // Update the select value and show the price input
+                    selectElement.value = customItem;
+                    priceInput.style.display = "block";
+                } else {
+                    // Reset to the default option if the user cancels or provides invalid input
+                    selectElement.value = "";
+                    priceInput.value = "";
+                    priceInput.style.display = "none";
+                }
+            } else {
+                // Show the price input if a predefined option is selected
+                priceInput.style.display = "block";
+            }
+        }
+        function exportToExcel() {
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.json_to_sheet(data);
+
+            XLSX.utils.book_append_sheet(wb, ws, "Expenditure Data");
+            XLSX.writeFile(wb, "expenditure_data.xlsx");
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch old entries when the page is loaded
+            fetch('/get_old_entries/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.old_entries) {
+                        // Add old entries to the data array
+                        data.old_entries.forEach(entry => {
+                            data.push({
+                                date: entry.date,
+                                label: entry.label,
+                                value: parseFloat(entry.value) || 0
+                            });
+                            
+                        });
+                    }
+        
+                    // Set the initial date when the page is loaded
+                    setInitialDate();
+        
+                    // Attach a click event listener to the "Save" button
+                    var saveButton = document.getElementById("saveButton");
+                    if (saveButton) {
+                        saveButton.addEventListener("click", function () {
+                            // Call the function to calculate the total and save the data
+                            calall();
+                        });
+                    }
+                    
+            
+            
+                });
+                
+        });
+
+        
+        function loadOldEntries() {
+            // Fetch old entries from the server and populate the data array
+            fetch('/get_old_entries/')
+                .then(response => response.json())
+                .then(oldEntries => {
+                    // Concatenate old entries with the existing data array
+                    data = data.concat(oldEntries);
+        
+                    // Calculate and display the total
+
+        
+                    console.log("Data after loading old entries:", data); 
+                    calculateAndDisplayTotal();
+                })
+                .catch(error => {
+                    console.error('Error fetching old entries:', error);
+                });
+        }
+        
+        function calculateAndDisplayTotal() {
+            var total = 0;
+        
+            // Iterate through each entry in the data array and add its value to the total
+            for (var i = 0; i < data.length; i++) {
+                total += data[i].value;
+            }
+        
+            // Display the total in the total container
+            document.getElementById("totalContainer").innerHTML = "&#8377;" + total.toFixed(2);
+        }
+        
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+            
+        function saveExpenses() {
+            console.log("Save button clicked");
+
+            // Collect expense data
+            var expenseData = [];
+            var dateInputs = document.getElementsByName("date");
+            var itemSelects = document.getElementsByName("expenseItems");
+            var priceInputs = document.getElementsByName("price");
+
+            for (var i = 0; i < dateInputs.length; i++) {
+                var date = dateInputs[i].value;
+                var label = itemSelects[i].value;
+                var value = parseFloat(priceInputs[i].value) || 0; // Convert to float, default to 0 if NaN
+
+                expenseData.push({ date: date, label: label, value: value });
+            }
+
+            console.log("Expense Data:", expenseData); // Debugging statement
+
+            // Send data to the server using AJAX
+            fetch('/save_expense_data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token, // Include the CSRF token
+                },
+                body: JSON.stringify({ data: expenseData }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Server Response:", data); // Debugging statement
+
+                    if (data.status === 'success') {
+                        alert('Expenses saved successfully!');
+                    } else {
+                        alert('Error saving expenses. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred. Please try again.');
+                });
+        }
+        var expenseCategories = [];  // Array to store unique expense categories
+var totalExpenses = {};      // Object to store total expenses per category
+
+// Calculate total expenses per category
+{% for expense in expenses %}
+    var category = "{{ expense.label }}";
+    var value = {{ expense.value }};
+
+    if (!totalExpenses[category]) {
+        totalExpenses[category] = value;
+        expenseCategories.push(category);
+    } else {
+        totalExpenses[category] += value;
+    }
+{% endfor %}
+var showChartButton = document.getElementById("showChartButton");
+var chartContainer = document.getElementById("chartContainer");
+
+// Hide the chart container initially
+chartContainer.style.display = "none";
+
+showChartButton.addEventListener("click", function () {
+    // Show the chart container
+    chartContainer.style.display = "block";
+
+    // Update or create the expenses chart
+    updateExpensesChart();
+});
+
+var ctx = document.getElementById("expensesChart").getContext("2d");
+
+var expensesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: expenseCategories,
+        datasets: [{
+            label: 'Total Expenses',
+            data: Object.values(totalExpenses),
+    
+            backgroundColor: ["rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 206, 86, 0.6)"],
+            borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
+            borderWidth: 1, // Border width
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top', // You can change this to 'bottom', 'left', or 'right'
+            },
+            title: {
+                display: true,
+                text: 'Expense Chart',
+            },
+        },
+    }
+});
+function updateExpensesChart() {
+    // Fetch old entries when the page is loaded
+    fetch('/get_old_entries/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.old_entries) {
+                // Add old entries to the data array
+                data.old_entries.forEach(entry => {
+                    data.push({
+                        date: entry.date,
+                        label: entry.label,
+                        value: parseFloat(entry.value) || 0
+                    });
+                });
+            }
+
+        
+            setInitialDate();
+
+            
+            var saveButton = document.getElementById("saveButton");
+            if (saveButton) {
+                saveButton.addEventListener("click", function () {
+                    
+                    calall();
+
+                    updateChart();
+                });
+            }
+
+            
+            updateChart();
+        });
+
+}
+
+function updateChart() {
+
+    expensesChart.data.datasets[0].data = Object.values(newTotalExpenses);
+    expensesChart.update();
+}
+
+    </script>
+</body>
+
+</html>

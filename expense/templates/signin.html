@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin page &#128184;</title>
+    <link rel="stylesheet" href="{% static 'E:\django project\expense\static\s4.css' %}">
+    <link rel="shortcut icon" type="x-icon" href="{% static 'logo.png' %}">
+    <style>
+        body {
+            background-image: url('{% static "3.jpg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .form {
+            width: 90%;
+            max-width: 450px;
+            height: 70%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url('{% static "rajini.jpg" %}');
+            background-position: center top;
+            padding: 50px 60px 70px;
+            text-align: center;
+            border-radius: 19px;
+        }
+
+        .form h1 {
+            font-size: 34px;
+            margin-bottom: 50px;
+            color: dodgerblue;
+            position: relative;
+        }
+
+        .form h1::after {
+            content: '';
+            width: 30px;
+            height: 4px;
+            border-radius: 3px;
+            background: dodgerblue;
+            position: absolute;
+            bottom: -17px;
+            left: 49%;
+            transform: translateX(-50%);
+        }
+
+        .inputfield {
+            background: #eaeaea;
+            margin: 15px 0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            max-height: 65px;
+            transition: max-height 0.5s;
+            overflow: hidden;
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            padding: 18px 15px;
+        }
+
+        form p {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        form p a {
+            text-decoration: none;
+        }
+
+        .btn {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn button {
+            background: violet;
+            color: white;
+            border-radius: 20px;
+            height:auto;
+            /* Use 100% width for the button */
+            width: 100%;
+        }
+
+        .btn button:hover {
+            background: dodgerblue;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{% static 'logo.png' %}" alt="Logo" class="logo">
+        <center>
+            <ul>
+                <li><a href='{% url "home" %}' style="color:white;">Home</a></li>
+                <li><a href='{% url "about" %}' style="color:white;">About</a></li>
+                <!-- Change the link to point to your signin URL -->
+                <li><a href='{% url "signin" %}' style="color:white;">Signin</a></li>
+                <li><a href='{% url "signup" %}' style="color:white;">Signup</a></li>
+                <li><a href='{% url "contact_us" %}' style="color:white;">Contact Us</a></li>
+            </ul>
+        </center>
+    </header>
+
+    <div class="signin1">
+        {% csrf_token %}
+        {{ form.errors }}
+        
+        <div class="form">
+            <!-- Update the form action to point to your signin view URL -->
+            <form method="post" action="{% url 'signin' %}">
+                {% csrf_token %}
+                
+                {{ form.errors }}
+                
+                <div class="input group">
+                    <div class="inputfield" id="namefield">
+                        <label for="{{ form.username.id_for_label }}">👤</label>
+                        <input type="text" name="{{ form.username.name }}" placeholder="Username">
+                    </div>
+                    <div class="inputfield">
+                        <label for="{{ form.password.id_for_label }}">🔒</label>
+                        <input type="password" name="{{ form.password.name }}" placeholder="Password">
+                    </div>
+                </div>
+            
+                <div class="btn">
+                    <button type="submit" id="inid">Sign in</button>
+                </div>
+            </form>
+            
+            </form>
+            <p>Forgot password?<a href="#">click here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // You may keep your existing JavaScript for now
+        let inid = document.getElementById("inid");
+        let n = document.getElementById("namefield");
+        inid.onclick = function () {
+            n.style.maxHeight = "0";
+        }
+    </script>
+</body>
+</html>

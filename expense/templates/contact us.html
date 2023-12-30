@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'E:\django project\expense\static\s2.css' %}">
+    <link rel="shortcut icon" type="x-icon" href="{% static 'logo.png' %}">
+    <style>
+        body {
+            background-image: url('{% static "bg.jpg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <title>Welcome to wisewallet 📈</title>
+</head>
+<body>
+    <header>
+        <img src="{% static 'logo.png' %}" alt="Logo" class="logo">
+        <center>
+            <ul>
+                <li><a href='{% url "home" %}' style="color:white;">Home</a></li>
+                <li><a href='{% url "about" %}' style="color:white;">About</a></li>
+                <li><a href='{% url "signin" %}' style="color:white;">Signin</a></li>
+                <li><a href='{% url "signup" %}' style="color:white;">Sign-up</a></li>
+                <li><a href='{% url "contact_us" %}' style="color:white;">Contact Us</a></li>
+            </ul>
+        </center>
+    </header>
+
+    <br><br><br>
+
+    <div class="contacts" align="center">
+        <form id="contactForm">
+            <label for="name">Enter your name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="location">Select your region</label>
+            <select name="location" id="location" required>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                
+            
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Pondicherry" selected>Pondicherry</option>
+            </select>
+
+            <label for="tel">Enter your Mobile number</label>
+            <input type="tel" id="tel" placeholder="Enter 10 digit Mobile no" name="tel" required>
+
+            <label for="email">Enter your email-id</label>
+            <input type="email" id="email" name="email">
+
+            <label for="message">Ask us!!!</label>
+            <textarea id="message" name="message" rows="4" cols="80" placeholder="Type here..."></textarea>
+
+            <button type="button" onclick="submitForm()">Send your query</button>  
+
+        </form>
+
+        <div class="contact-info">
+            <p>Address: 42 Mission Street, Pondicherry</p>
+            <p>Email: support@wisewallet.in</p>
+        </div>
+    </div>
+
+    <script>
+        function submitForm() {
+            // You can add your form submission logic here
+            // For now, let's just alert a message
+            alert('Form submitted!');
+        }
+    </script>
+</body>
+</html>

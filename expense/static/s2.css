@@ -1,0 +1,160 @@
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: powderblue;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+header {
+  background-color: black;
+  padding: 30px; /* Adjust the padding to increase header height */
+  box-shadow: 0 0 10px red;
+  color: white;
+  position: relative; /* Ensure the header is a positioned element */
+}
+
+header li {
+  display: inline;
+  margin-left: 55px;
+}
+
+header li a {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  padding: 15px;
+  overflow: hidden;
+}
+
+header li a:before,
+header li a:after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0;
+  background-color: #18f08b;
+  transition: width 0.5s;
+}
+
+header li a:after {
+  right: 0;
+  top: 0;
+}
+
+header li a:before {
+  left: 0;
+  bottom: 0;
+}
+
+header li a:hover:before,
+header li a:hover:after {
+  width: 100%;
+}
+
+header li a:hover {
+  color: #ffffff;
+}
+
+.logo {
+  position: absolute; /* Change fixed to absolute */
+  height: 60px; /* Increase the height of the logo */
+  left: 18px;
+  width: auto; /* Allow the width to adjust automatically */
+  top: 50%; /* Center the logo vertically */
+  transform: translateY(-50%); /* Center the logo vertically */
+}
+
+.article {
+  width: 50%;
+  margin: auto;
+  text-align: center;
+  transform: translateY(25vh);
+}
+
+.contacts {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+  margin: 20px auto; /* Center the form */
+}
+
+form {
+  display: grid;
+  gap: 15px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3952a3;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #31477e;
+}
+
+.contact-info {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.contact-info p {
+  margin: 0;
+}
+
+/* Add emojis for email, address, and phone */
+label[for="email"]:before {
+  content: "✉️ ";
+  margin-right: 5px;
+}
+
+label[for="location"]:before {
+  content: "🌍 ";
+  margin-right: 5px;
+}
+
+label[for="tel"]:before {
+  content: "📱 ";
+  margin-right: 5px;
+}
+
+/* Replace "Address" and "Email" with emojis */
+.contact-info p:contains("Address") {
+  content: "📍 " attr(data-content);
+}
+
+.contact-info p:contains("Email") {
+  content: "✉️ " attr(data-content);
+}

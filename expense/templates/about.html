@@ -1,0 +1,78 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <title>{% block title %}Welcome to wisewallet &#128184;{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'E:\django project\expense\static\s3.css' %}">
+    <link rel="shortcut icon" type="x-icon" href="{% static 'logo.png' %}">
+    <style>
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-image: url('{% static "about.jpg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0.5; /* Adjust the opacity as needed */
+            z-index: -1;
+        }
+
+        body {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+    {% block additional_styles %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        {% block header %}
+        <img src="{% static 'logo.png' %}" alt="Logo" class="logo">
+
+        <center>
+            <ul>
+                <li><a href='{% url "home" %}' style="color:white;">Home</a></li>
+                <li><a href='{% url "about" %}' style="color:white;">About</a></li>
+                <li><a href='{% url "signin" %}' style="color:white;">Signin</a></li>
+                <li><a href='{% url "signup" %}' style="color:white;">Sign-up</a></li>
+                <li><a href='{% url "contact_us" %}' style="color:white;">Contact Us</a></li>
+            </ul>
+        </center>
+
+        {% endblock %}
+    </header><br>
+
+    <div class="about">
+        <h1 style="font-family: 'Lucida Handwriting';">About wisewallet</h1><br><br>
+        <p>
+            <h2>&nbsp;Hello from wisewallet!</h2><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome to wisewallet, where simplicity meets smart money management. I’m Siva,
+            the creator of this budgeting buddy.
+            <br><br><h3>
+                &nbsp;What wisewallet Does:</h3><br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;1. Easy Finances: No more financial stress. wisewallet is here to simplify expense tracking, making your money matters hassle-free.<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;2. Your Money Ally: Think of wisewallet as your friendly finance guide. From budget basics to hitting savings targets, it's here to support you.
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;3. Visualize Your Spending: Ever wanted to see your spending habits at a glance? wisewallet's visual charts and graphs turn your transactions into easy-to-understand pictures.
+             <br><br> 
+             &nbsp;&nbsp;&nbsp;&nbsp;4. Security Matters: Your data's safety is my priority. wisewallet comes with top-notch security features, so your financial info stays secure.
+            <br><br> 
+            <h3>&nbsp;The Story Behind wisewallet:</h3><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Started in my dorm room, wisewallet was my solution to making finance simple for everyone. No professional here—just a student passionate about coding and coffee.
+            <br><br>
+            <h3>&nbsp;Let's Chat:</h3><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Questions or thoughts? I'm a solo coder but always up for a chat. Drop me an email <a href = "mailto: sivavelayutham2002@gmail.com">&#x2709;
+                </a> or find me on <a href="https://www.instagram.com/siva__07/">&#x1F4F7;</a>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Here's to stress-free finances with wisewallet! 🚀
+        </p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Welcome to wisewallet 📈{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'E:\django project\expense\static\s1.css' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'logo.png' %}">
+    <style>
+        body {
+            background-image: url('{% static "bg.jpg" %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    {% block additional_styles %}{% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+        <img src="{% static 'logo.png' %}" alt="Logo" class="logo">
+        <center>
+            <ul>
+                <li><a href="{% url 'home' %}" style="color:white;">Home</a></li>
+                <li><a href="{% url 'about' %}" style="color:white;">About</a></li>
+                <li><a href="{% url "signin" %}" style="color:white;">Signin</a></li>
+                <li><a href="{% url 'signup' %}" style="color:white;">Sign-up</a></li>
+                <li><a href="{% url 'contact_us' %}" style="color:white;">Contact Us</a></li>
+            </ul>
+        </center>
+        {% endblock %}
+    </header>
+
+    <div class="article">
+        <center>
+            <h1 style="font-family: 'Lucida Handwriting';">Track today, Thrive tomorrow!!!!</h1>
+        </center>
+        <p>Unlock the power of financial control with an expense tracker — a tool designed to<br> 
+            streamline your spending, prioritize your goals,<br>
+            and pave the path to financial empowerment</p>
+    </div>
+</body>
+</html>

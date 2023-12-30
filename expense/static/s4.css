@@ -1,0 +1,165 @@
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: powderblue;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+header {
+  background-color: black;
+  padding: 30px;
+  box-shadow: 0 0 10px red;
+  color: white;
+  position: relative;
+}
+
+header li {
+  display: inline;
+  margin-left: 55px;
+}
+
+header li a {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  padding: 15px;
+  overflow: hidden;
+}
+
+header li a:before,
+header li a:after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0;
+  background-color: #18f08b;
+  transition: width 0.5s;
+}
+
+header li a:after {
+  right: 0;
+  top: 0;
+}
+
+header li a:before {
+  left: 0;
+  bottom: 0;
+}
+
+header li a:hover:before,
+header li a:hover:after {
+  width: 100%;
+}
+
+header li a:hover {
+  color: #ffffff;
+}
+
+.logo {
+  position: absolute;
+  height: 60px;
+  left: 18px;
+  width: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.article {
+  width: 50%;
+  margin: auto;
+  text-align: center;
+  transform: translateY(25vh);
+}
+
+
+.form {
+  width: 90%;
+  max-width: 450px;
+  height: 70%;
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image:url('{% static "rajini.jpg" %}');
+  background-position: center top;
+  padding: 50px 60px 70px;
+  text-align: center;
+  border-radius: 19px;
+}
+
+.form h1 {
+  font-size: 34px;
+  margin-bottom: 50px;
+  color: dodgerblue;
+  position: relative;
+}
+
+.form h1::after {
+  content: '';
+  width: 30px;
+  height: 4px;
+  border-radius: 3px;
+  background: dodgerblue;
+  position: absolute;
+  bottom: -17px;
+  left: 49%;
+  transform: translateX(-50%);
+}
+
+.inputfield {
+  background: #eaeaea;
+  margin: 15px 0;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  max-height: 65px;
+  transition: max-height 0.5s;
+  overflow: hidden;
+}
+
+input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 18px 15px;
+}
+
+form p {
+  text-align: center;
+  color: white;
+  font-size: 14px;
+}
+
+form p a {
+  text-decoration: none;
+}
+
+.btn {
+  width: 100%;
+  flex-direction: column; /* Change to column layout */
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn button {
+  flex-basis: 48%;
+  background: violet;
+  
+  margin-top: 10px;
+  color: white;
+  border-radius: 20px;
+  height: 40px
+}
+.btn button:hover {
+  background: dodgerblue;
+}

@@ -1,0 +1,362 @@
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+
+
+header {
+  background-color: black;
+  padding: 30px; 
+  box-shadow: 0 0 10px red;
+  color: white;
+  position: relative; 
+}
+
+header li {
+  display: inline;
+  margin-left: 55px;
+}
+
+header li a {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  padding: 15px;
+  overflow: hidden;
+}
+
+header li a:before,
+header li a:after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0;
+  background-color: #18f08b;
+  transition: width 0.5s;
+}
+
+header li a:after {
+  right: 0;
+  top: 0;
+}
+
+header li a:before {
+  left: 0;
+  bottom: 0;
+}
+
+header li a:hover:before,
+header li a:hover:after {
+  width: 100%;
+}
+
+header li a:hover {
+  color: #ffffff;
+}
+
+.logo {
+  position: absolute; /* Change fixed to absolute */
+  height: 60px; /* Increase the height of the logo */
+  left: 18px;
+  width: auto; /* Allow the width to adjust automatically */
+  top: 50%; /* Center the logo vertically */
+  transform: translateY(-50%); /* Center the logo vertically */
+}
+.article{
+    width:50%;
+    margin:auto;
+    text-align:center;
+    transform:translateY(25vh);
+}
+
+
+.mc1{
+  text-align:right;
+}
+.mc {
+  font-size:14px;
+  padding: 0.3em 1em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  
+}
+
+.mc:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing-mc 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+@keyframes glowing-mc {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.mc:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+.items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  
+  }
+
+.item-container {
+        display: flex;
+        align-items:center;
+        margin-bottom: 10px;
+        justify-content:left;
+        height: 60px;
+        width: 70%;
+    }
+   
+
+.item-container label,
+.item-container select,
+.item-container input,
+.item-container button {
+  margin-right: 10px; 
+  align-items: left; 
+}
+
+
+.item-container select {
+    flex-grow: 1;
+    border: none;
+    background: #444;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+
+.item-container input[type="number"] {
+    flex-grow: 1;
+    border: none;
+    background: #444;
+    color: white;
+    padding: 10px;
+    border-radius:8px;
+    box-sizing: border-box;
+}
+.item-container input[type="date"] {
+  flex-grow:0;
+  border: none;
+  text-align:left;
+  margin-right:10px;;
+  background: #444;
+  color: white;
+  padding: 10px;
+  width:60 px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.item-container button {
+      flex-grow: 1;
+    background: #555;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+.item-container label[for="date"] {
+  flex-grow: 0;
+  width: 80px; 
+  text-align: left;
+  margin-right: 10px; 
+  color: #4285f4; 
+  font-weight: bold; 
+  font-size: 14px; 
+}
+
+
+.item-container button:hover {
+    background: #777;
+}
+
+.select-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 250px;
+    height: 40px;
+}
+.select-container input[type="date"] {
+  margin-right: 10px;
+}
+
+.select {
+    padding: 0 30px 0 10px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    background: #333;
+    border-top: #222 solid 1px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    pointer-events: none;
+    order: 2;
+    z-index: 1;
+    transition: background .4s ease-in-out;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.select:hover {
+    background: #666;
+}
+
+.select:focus .select {
+    position: relative;
+    pointer-events: all;
+}
+
+.price-input {
+    opacity: 0;
+    position: absolute;
+    left: -99999px;
+}
+
+.price-input:checked + label {
+    order: 1;
+    z-index: 2;
+    background: #666;
+    border-top: none;
+    position: relative;
+}
+
+.price-input:checked + label:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid white;
+    position: absolute;
+    right: 10px;
+    top: calc(50% - 2.5px);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.price-input:checked + label:before {
+    position: absolute;
+    right: 0;
+    height: 40px;
+    width: 40px;
+    content: '';
+    background: #666;
+
+}
+
+.container1 {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+table {
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th,
+td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+}
+
+th {
+	text-align: left;
+}
+
+thead {
+	th {
+		background-color: #55608f;
+	}
+}
+
+tbody {
+	tr {
+		&:hover {
+			background-color: rgba(255,255,255,0.3);
+		}
+	}
+	td {
+		position: relative;
+		&:hover {
+			&:before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -9999px;
+				bottom: -9999px;
+				background-color: rgba(255,255,255,0.2);
+				z-index: -1;
+			}
+		}
+	}
+}
